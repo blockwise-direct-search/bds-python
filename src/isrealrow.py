@@ -1,15 +1,14 @@
 import numpy as np
-
+import pdb
 
 def isrealrow(x):
     if np.size(x) == 0:
         isrr = True
         length = 0
-    elif np.isrealobj(x) and np.ndim(x) == 1 and x.shape[0] == 1:
+    elif (x.size == 1 and x.ndim == 1) or np.ndim(x) == 1:
         isrr = True
         length = len(x)
     else:
         isrr = False
         length = np.nan
-
-        return isrr, length
+    return isrr, length

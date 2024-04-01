@@ -1,22 +1,23 @@
 import numpy as np
 import pdb
-import isrow
-import verify_preconditions
+import _isrow
+import _verify_preconditions
+import _ischarstr
+import functools
+from examples import rosenbrock_example
 
 
-
-def bds(var1, x0, options=None):
+# To my understanding, it is more reasonable to let x0 be a numpy vector, not list.
+def bds(fun, x0, options=None):
     if options is None:
         options = {}
 
-    result1 = var1
-
     # Transpose x0 if it is a row vector.
-    x0_is_row = isrow.check_row_vector(x0)
+    x0_is_row = _isrow.check_row_vector(x0)
     if x0_is_row:
         x0 = x0.reshape(-1, 1)
-    #pdb.set_trace()
-    result2 = x0
+    # pdb.set_trace()
+    result = x0
 
     # Set the default value of debug_flag. If options do not contain debug_flag, then
     # debug_flag is set to false.
@@ -27,10 +28,20 @@ def bds(var1, x0, options=None):
 
     if debug_flag:
         print("x0_is_row: ", x0_is_row)
+        _verify_preconditions.verify_preconditions(fun, x0, options)
 
-    return result1, result2, debug_flag
+    # If FUN is a string, then convert it to a function handle.
+    if _ischarstr.ischarstr(fun):
+        fun = eval(fun)
+    # Redefine fun to accept column vectors if x0 is a row vector, as we use column vectors internally.
+    fun_orig = fun
+    if x0_is_row:
+        fun = functools.partial(fun, x=lambda x: x.T)
+
+    return result, debug_flag
 
 
-output1, output2, output4 = bds(1, np.array([1, 2, 3, 4, 5]))
-output3 = output2.ndim <= 2 and output2.shape[-1] == 1
-print(output1, output2, output3, output4)
+options = {"debug_flag": True}
+output1, output2 = bds(rosenbrock_example.chrosen, np.array([1, 2, 3, 4, 5]), options)
+# output3 = output2.ndim <= 2 and output2.shape[-1] == 1
+# print(output1, output2, output3, output4)

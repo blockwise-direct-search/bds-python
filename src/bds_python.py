@@ -3,6 +3,7 @@ import pdb
 import _isrow
 import _verify_preconditions
 import _ischarstr
+import _get_default_constant
 import functools
 from examples import rosenbrock_example
 
@@ -37,6 +38,23 @@ def bds(fun, x0, options=None):
     fun_orig = fun
     if x0_is_row:
         fun = functools.partial(fun, x=lambda x: x.T)
+
+    if not "seed" in options:
+        options["seed"] = _get_default_constant.get_default_constant("seed")
+    np.random.seed(options["seed"])
+
+    n = len(x0)
+    if not "Algorithm" in options:
+        options["Algorithm"] = _get_default_constant.get_default_constant("Algorithm")
+
+    if "direction_set_type" in options:
+        if options["direction_set_type"].lower() == "randomized_orthogonal":
+            random_matrix = np.random.randn(n * n).reshape(n, n)
+            options["direction_set"], _ = np.linalg.qr(random_matrix)
+        elif options["direction_set_type"].lower() == "randomized":
+            options["direction_set"] = np.random.randn(n, n)
+
+
 
     return result, debug_flag
 

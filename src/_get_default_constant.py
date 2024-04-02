@@ -22,8 +22,6 @@ def get_default_constant(constant_name):
         constant_value = 1
     elif constant_name == "replacement_delay":
         constant_value = 1
-    elif constant_name == "seed":
-        constant_value = "shuffle"
     elif constant_name == "ftarget":
         constant_value = -float("inf")
     elif constant_name == "polling_inner":

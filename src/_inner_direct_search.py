@@ -2,6 +2,7 @@ import numpy as np
 import _eval_fun
 from _cycling import cycling
 from _get_exitflag import get_exitflag
+import pdb
 
 
 def inner_direct_search(fun, xbase, fbase, D, direction_indices, alpha, options):
@@ -36,7 +37,7 @@ def inner_direct_search(fun, xbase, fbase, D, direction_indices, alpha, options)
     xopt = xbase
 
     for j in range(1, num_directions + 1):
-
+        pdb.set_trace()
         xnew = xbase + alpha * D[:, direction_indices[j - 1]]
         [fnew, fnew_real] = _eval_fun.eval_fun(fun, xnew)
         nf = nf + 1

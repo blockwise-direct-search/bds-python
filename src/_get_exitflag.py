@@ -27,7 +27,7 @@ def get_exitflag(information, debug_flag):
         exitflag = -1
 
     # exitflag = find(break_conditions == information) - 1;
-    if exitflag == -1:
+    if not exitflag:
         exitflag = -1
         print("New break condition happens.")
 

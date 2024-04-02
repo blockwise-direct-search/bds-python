@@ -1,10 +1,13 @@
 import numpy as np
 import _eval_fun
 from _cycling import cycling
+from _get_exitflag import get_exitflag
 
 
 def inner_direct_search(fun, xbase, fbase, D, direction_indices, alpha, options):
     reduction_factor = options["reduction_factor"]
+
+    ftarget = options["ftarget"]
 
     polling_inner = options["polling_inner"]
 
@@ -55,4 +58,16 @@ def inner_direct_search(fun, xbase, fbase, D, direction_indices, alpha, options)
             direction_indices = cycling(direction_indices, j, cycling_strategy, with_cycling_memory, debug_flag)
             break
 
-        
+        if nf >= MaxFunctionEvaluations | fnew < ftarget:
+            break
+
+    terminate = (nf >= MaxFunctionEvaluations) or (fnew <= ftarget)
+    if fnew <= ftarget:
+        exitflag = get_exitflag("FTARGET_REACHED", debug_flag)
+    elif nf >= MaxFunctionEvaluations:
+        exitflag = get_exitflag("MAXFUN_REACHED", debug_flag)
+
+    output = {"fhist": fhist[1:nf], "xhist": xhist[:, :nf], "nf": nf, "direction_indices": direction_indices,
+              "terminate": terminate}
+
+    return [xopt, fopt, exitflag, output]

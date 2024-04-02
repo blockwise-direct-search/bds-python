@@ -243,7 +243,7 @@ def bds(fun, x0, options=None):
             block_indices = np.concatenate([all_block_indices, np.arange(num_blocks - 1, 1, -1)])
 
         for i in range(1, len(block_indices) + 1):
-            i_real = block_indices[i - 1]
+            i_real = block_indices[i - 1] - 1
 
             direction_indices = direction_set_indices[i_real]
 

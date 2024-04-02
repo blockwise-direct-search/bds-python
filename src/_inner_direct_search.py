@@ -1,5 +1,5 @@
 import numpy as np
-import _eval_fun
+from _eval_fun import eval_fun
 from _cycling import cycling
 from _get_exitflag import get_exitflag
 import pdb
@@ -38,8 +38,9 @@ def inner_direct_search(fun, xbase, fbase, D, direction_indices, alpha, options)
 
     for j in range(1, num_directions + 1):
         pdb.set_trace()
-        xnew = xbase + alpha * D[:, direction_indices[j - 1]]
-        [fnew, fnew_real] = _eval_fun.eval_fun(fun, xnew)
+        # Without reshape(-1, 1), D[:, direction_indices[j - 1]] will be a 1D array, not column vector.
+        xnew = xbase + alpha * D[:, direction_indices[j - 1]].reshape(-1, 1)
+        [fnew, fnew_real] = eval_fun(fun, xnew)
         nf = nf + 1
         fhist = np.append(fhist, fnew_real)
         xhist = np.append(xhist, xnew)

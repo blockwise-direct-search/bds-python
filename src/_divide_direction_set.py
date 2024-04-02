@@ -25,7 +25,7 @@ def divide_direction_set(n, num_blocks, debug_flag):
     index_direction_list = [[] for _ in range(num_blocks)]
     for i in range(1, num_blocks + 1):
         if i == 1:
-            index_direction_list[i - 1] = list(range(1, 2*num_directions_block[i - 1]+1, 1))
+            index_direction_list[i - 1] = list(range(0, 2*num_directions_block[i - 1], 1))
         else:
             index_direction_list[i - 1] = list(range(index_direction_list[i - 2][-1] + 1,
                                                      index_direction_list[i - 2][-1] + 1 + (

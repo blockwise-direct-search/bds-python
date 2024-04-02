@@ -1,9 +1,11 @@
 import numpy as np
+import math
 import pdb
-import _isrow
-import _verify_preconditions
-import _ischarstr
-import _get_default_constant
+from _isrow import is_row
+from _verify_preconditions import verify_preconditions
+from _ischarstr import ischarstr
+from _get_default_constant import get_default_constant
+from _get_direction_set import get_direction_set
 import functools
 from examples import rosenbrock_example
 
@@ -14,7 +16,7 @@ def bds(fun, x0, options=None):
         options = {}
 
     # Transpose x0 if it is a row vector.
-    x0_is_row = _isrow.check_row_vector(x0)
+    x0_is_row = is_row(x0)
     if x0_is_row:
         x0 = x0.reshape(-1, 1)
     # pdb.set_trace()
@@ -29,10 +31,10 @@ def bds(fun, x0, options=None):
 
     if debug_flag:
         print("x0_is_row: ", x0_is_row)
-        _verify_preconditions.verify_preconditions(fun, x0, options)
+        verify_preconditions(fun, x0, options)
 
     # If FUN is a string, then convert it to a function handle.
-    if _ischarstr.ischarstr(fun):
+    if ischarstr(fun):
         fun = eval(fun)
     # Redefine fun to accept column vectors if x0 is a row vector, as we use column vectors internally.
     fun_orig = fun
@@ -40,12 +42,12 @@ def bds(fun, x0, options=None):
         fun = functools.partial(fun, x=lambda x: x.T)
 
     if not "seed" in options:
-        options["seed"] = _get_default_constant.get_default_constant("seed")
+        options["seed"] = get_default_constant("seed")
     np.random.seed(options["seed"])
 
     n = len(x0)
     if not "Algorithm" in options:
-        options["Algorithm"] = _get_default_constant.get_default_constant("Algorithm")
+        options["Algorithm"] = get_default_constant("Algorithm")
 
     if "direction_set_type" in options:
         if options["direction_set_type"].lower() == "randomized_orthogonal":
@@ -54,7 +56,15 @@ def bds(fun, x0, options=None):
         elif options["direction_set_type"].lower() == "randomized":
             options["direction_set"] = np.random.randn(n, n)
 
+    D = get_direction_set(n, options)
 
+    num_directions = D.shape[1]
+    if options["Algorithm"].lower() == "ds":
+        num_blocks = 1
+    elif "block" in options:
+        num_blocks = min(num_directions, options["block"])
+    elif options["Algorithm"].lower() in ["cbds", "pbds", "rbds", "pads", "scbds"]:
+        num_blocks = math.ceil(num_directions / 2)
 
     return result, debug_flag
 

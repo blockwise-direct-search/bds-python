@@ -1,14 +1,11 @@
-import numpy as np
-from _isrealrow import isrealrow
-from _isrealcolumn import isrealcolumn
-import pdb
+import __init__
 
 
 def isrealvector(x):
-    if isrealrow(x)[0] or isrealcolumn(x)[0]:
+    if __init__.isrealrow(x)[0] or __init__.isrealcolumn(x)[0]:
         isrv = True
         length = len(x)
     else:
         isrv = False
-        length = np.nan
+        length = __init__.np.nan
     return isrv, length

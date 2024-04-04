@@ -1,13 +1,11 @@
-import numpy as np
-from _isintegerscalar import isintegerscalar
-import pdb
+import __init__
 
 
 def divide_direction_set(n, num_blocks, debug_flag):
     if debug_flag:
-        if not isintegerscalar(n) or n <= 0:
+        if not __init__.isintegerscalar(n) or n <= 0:
             raise ValueError('n is not a positive integer.')
-        if not isintegerscalar(num_blocks) or num_blocks <= 0:
+        if not __init__.isintegerscalar(num_blocks) or num_blocks <= 0:
             raise ValueError('num_blocks is not a positive integer.')
         if n < num_blocks:
             raise ValueError('The number of blocks should not be greater than the number of variables.')

@@ -1,4 +1,4 @@
-from _isintegerscalar import isintegerscalar
+import __init__
 
 
 def get_exitflag(information, debug_flag):
@@ -33,7 +33,7 @@ def get_exitflag(information, debug_flag):
 
     # Check whether EXITFLAG is an integer or not.
     if debug_flag:
-        if not isintegerscalar(exitflag):
+        if not __init__.isintegerscalar(exitflag):
             raise ValueError("Exitflag is not an integer.")
 
     return exitflag

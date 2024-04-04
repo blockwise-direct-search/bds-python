@@ -1,8 +1,7 @@
-import numpy as np
-from _isrealscalar import isrealscalar
+import __init__
 
 
 # ISINTEGERSCALAR checks whether x is an integer scalar.
 def isintegerscalar(x):
-    isis = isrealscalar(x) and (x % 1 == 0)
+    isis = __init__.isrealscalar(x) and (x % 1 == 0)
     return isis

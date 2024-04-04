@@ -1,4 +1,4 @@
-import numpy as np
+import __init__
 
 
 def eval_fun(fun, x):
@@ -7,11 +7,11 @@ def eval_fun(fun, x):
         f_real = fun(x)
     except:
         print('The function evaluation failed.')
-        f_real = np.nan
+        f_real = __init__.np.nan
 
     # Apply the moderate extreme barrier to handle NaN, huge values, and evaluation failures.
-    if np.isnan(f_real):
-        f_real = np.inf
-    f = min(f_real, 2 ** 100, np.sqrt(np.finfo(float).max))
+    if __init__.np.isnan(f_real):
+        f_real = __init__.np.inf
+    f = min(f_real, 2 ** 100, __init__.np.sqrt(__init__.np.finfo(float).max))
 
     return f, f_real

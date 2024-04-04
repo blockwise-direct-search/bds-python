@@ -1,8 +1,4 @@
-import numpy as np
-from _eval_fun import eval_fun
-from _cycling import cycling
-from _get_exitflag import get_exitflag
-import pdb
+import __init__
 
 
 def inner_direct_search(fun, xbase, fbase, D, direction_indices, alpha, options):
@@ -26,24 +22,24 @@ def inner_direct_search(fun, xbase, fbase, D, direction_indices, alpha, options)
 
     debug_flag = options["debug_flag"]
 
-    exitflag = np.nan
+    exitflag = __init__.np.nan
 
     n = len(xbase)
     num_directions = len(direction_indices)
-    fhist = np.full((1, MaxFunctionEvaluations), np.nan)
-    xhist = np.full((n, MaxFunctionEvaluations), np.nan)
+    fhist = __init__.np.full((1, MaxFunctionEvaluations), __init__.np.nan)
+    xhist = __init__.np.full((n, MaxFunctionEvaluations), __init__.np.nan)
     nf = 0
     fopt = fbase
     xopt = xbase
 
     for j in range(1, num_directions + 1):
-        pdb.set_trace()
+
         # Without reshape(-1, 1), D[:, direction_indices[j - 1]] will be a 1D array, not column vector.
         xnew = xbase + alpha * D[:, direction_indices[j - 1]].reshape(-1, 1)
-        [fnew, fnew_real] = eval_fun(fun, xnew)
+        [fnew, fnew_real] = __init__.eval_fun(fun, xnew)
         nf = nf + 1
-        fhist = np.append(fhist, fnew_real)
-        xhist = np.append(xhist, xnew)
+        fhist = __init__.np.append(fhist, fnew_real)
+        xhist = __init__.np.append(xhist, xnew)
         if iprint > 0:
             print("Function number {}, F = {:.6f}".format(FunctionEvaluations_exhausted + nf, fnew))
             print("The corresponding X is:")
@@ -53,11 +49,11 @@ def inner_direct_search(fun, xbase, fbase, D, direction_indices, alpha, options)
         if fnew < fopt:
             xopt = xnew
             fopt = fnew
-
-        sufficient_decrease = (fnew + reduction_factor(3) * forcing_function(alpha) / 2 < fbase)
+        __init__.pdb.set_trace()
+        sufficient_decrease = (fnew + reduction_factor[3] * forcing_function(alpha) / 2 < fbase)
 
         if sufficient_decrease and polling_inner.lower() == "complete":
-            direction_indices = cycling(direction_indices, j, cycling_strategy, with_cycling_memory, debug_flag)
+            direction_indices = __init__.cycling(direction_indices, j, cycling_strategy, with_cycling_memory, debug_flag)
             break
 
         if nf >= MaxFunctionEvaluations | fnew < ftarget:
@@ -65,9 +61,9 @@ def inner_direct_search(fun, xbase, fbase, D, direction_indices, alpha, options)
 
     terminate = (nf >= MaxFunctionEvaluations) or (fnew <= ftarget)
     if fnew <= ftarget:
-        exitflag = get_exitflag("FTARGET_REACHED", debug_flag)
+        exitflag = __init__.get_exitflag("FTARGET_REACHED", debug_flag)
     elif nf >= MaxFunctionEvaluations:
-        exitflag = get_exitflag("MAXFUN_REACHED", debug_flag)
+        exitflag = __init__.get_exitflag("MAXFUN_REACHED", debug_flag)
 
     output = {"fhist": fhist[1:nf], "xhist": xhist[:, :nf], "nf": nf, "direction_indices": direction_indices,
               "terminate": terminate}

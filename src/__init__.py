@@ -2,6 +2,7 @@ import numpy as np
 import warnings
 import pdb
 import math
+import pycutest
 from _cycling import cycling as cycling
 from _divide_direction_set import divide_direction_set as divide_direction_set
 from _eval_fun import eval_fun as eval_fun

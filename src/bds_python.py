@@ -5,7 +5,6 @@ from examples.rosenbrock_example import chrosen
 # To my understanding, it is more reasonable to let x0 be a numpy vector in our algorithm, not list.
 # Thus, we need to convert x0 to a numpy vector if it is a list.
 def bds(fun, x0, options=None):
-
     # If FUN is a string, then convert it to a function handle.
     if __init__.ischarstr(fun):
         fun = eval(fun)
@@ -29,7 +28,7 @@ def bds(fun, x0, options=None):
 
         def fun(x):
             return fun_orig(x.T)
-    __init__.pdb.set_trace()
+
     # If options is None, then set it to an empty dictionary.
     if options is None:
         options = {}
@@ -94,11 +93,16 @@ def bds(fun, x0, options=None):
         forcing_function = options["forcing_function"]
     else:
         forcing_function = __init__.get_default_constant("forcing_function")
+
     if "forcing_function_type" in options:
         if options["forcing_function_type"] == "quadratic":
-            forcing_function = lambda x: x ** 2
+
+            def forcing_function(x):
+                return x ** 2
         elif options["forcing_function_type"] == "cubic":
-            forcing_function = lambda x: x ** 3
+
+            def forcing_function(x):
+                return x ** 3
 
     if "polling_inner" in options:
         polling_inner = options["polling_inner"]
@@ -149,9 +153,9 @@ def bds(fun, x0, options=None):
     if output_alpha_hist:
         try:
             alpha_hist = __init__.np.full((num_blocks, maxit), __init__.np.nan)
-        except:
+        except Exception as e:
+            print("An exception occurred:", str(e))
             output_alpha_hist = False
-            print("alpha_hist will not be included in the output due to memory limitations.")
 
     if "alpha_init" in options:
         if len(options["alpha_init"]) == 1:
@@ -182,9 +186,9 @@ def bds(fun, x0, options=None):
     if output_xhist:
         try:
             xhist = __init__.np.full((n, maxit), __init__.np.nan)
-        except:
+        except Exception as e:
+            print("An exception occurred:", str(e))
             output_xhist = False
-            print("xhist will not be included in the output due to memory limitations.")
 
     if "output_block_hist" in options:
         output_block_hist = options["output_block_hist"]
@@ -192,16 +196,17 @@ def bds(fun, x0, options=None):
         output_block_hist = __init__.get_default_constant("output_block_hist")
     block_hist = __init__.np.full((1, maxit), __init__.np.nan)
 
-    if "iprint" in options:
-        iprint = options["iprint"]
+    if "verbose" in options:
+        verbose = options["verbose"]
     else:
-        iprint = __init__.get_default_constant("iprint")
+        verbose = __init__.get_default_constant("verbose")
 
     exitflag = __init__.get_exitflag("MAXIT_REACHED", debug_flag)
 
     xbase = x0
     [fbase, fbase_real] = __init__.eval_fun(fun, xbase)
-    if iprint == 1:
+    __init__.pdb.set_trace()
+    if verbose:
         print("Function number %d, F = %f" % (1, fbase))
         print("The corresponding X is:")
         print(" ".join(map(str, xbase.flatten())))
@@ -212,6 +217,7 @@ def bds(fun, x0, options=None):
 
     nf = 1
     if output_xhist:
+        xhist = __init__.np.full((n, maxit), __init__.np.nan)
         xhist[:, nf - 1] = xbase
 
     fhist[nf - 1] = fbase_real
@@ -250,7 +256,7 @@ def bds(fun, x0, options=None):
             suboptions = {"FunctionEvaluations_exhausted": nf, "MaxFunctionEvaluations": MaxFunctionEvaluations - nf,
                           "cycling_inner": cycling_inner, "with_cycling_memory": with_cycling_memory,
                           "reduction_factor": reduction_factor, "forcing_function": forcing_function,
-                          "ftarget": ftarget, "polling_inner": "polling_inner", "iprint": iprint,
+                          "ftarget": ftarget, "polling_inner": polling_inner, "verbose": verbose,
                           "debug_flag": debug_flag}
 
             [sub_xopt, sub_fopt, sub_exitflag, sub_output] = __init__.inner_direct_search(fun, xbase,
@@ -343,6 +349,6 @@ def bds(fun, x0, options=None):
     return xopt, fopt, exitflag, output
 
 
-output1 = bds(chrosen, [1, 2, 3, 4, 5])
+output1 = bds(chrosen, [1, 2, 3, 4, 5], options={"verbose": "True"})
 # output3 = output2.ndim <= 2 and output2.shape[-1] == 1
 # print(output1, output2, output3, output4)

@@ -9,7 +9,7 @@ def verify_preconditions(fun, x0, options):
 
     if not __init__.isrealvector(x0)[0]:
         raise ValueError("x0 should be a real vector.")
-    # pdb.set_trace()
+
     if "MaxFunctionEvaluations" in options:
         if not (__init__.isintegerscalar(options["MaxFunctionEvaluations"]) and options[
                                                                                 "MaxFunctionEvaluations"] > 0):

@@ -18,7 +18,7 @@ def inner_direct_search(fun, xbase, fbase, D, direction_indices, alpha, options)
 
     FunctionEvaluations_exhausted = options["FunctionEvaluations_exhausted"]
 
-    iprint = options["iprint"]
+    verbose = options["verbose"]
 
     debug_flag = options["debug_flag"]
 
@@ -40,7 +40,7 @@ def inner_direct_search(fun, xbase, fbase, D, direction_indices, alpha, options)
         nf = nf + 1
         fhist = __init__.np.append(fhist, fnew_real)
         xhist = __init__.np.append(xhist, xnew)
-        if iprint > 0:
+        if verbose:
             print("Function number {}, F = {:.6f}".format(FunctionEvaluations_exhausted + nf, fnew))
             print("The corresponding X is:")
             print(" ".join("{:.6f}".format(x) for x in xnew.flatten()))

@@ -13,7 +13,9 @@ def get_default_constant(constant_name):
     elif constant_name == "reduction_factor":
         constant_value = [0, sys.float_info.min, sys.float_info.min]
     elif constant_name == "forcing_function":
-        constant_value = lambda alpha: alpha ** 2
+        def constant_value(alpha):
+            return alpha ** 2
+
     elif constant_name == "alpha_init":
         constant_value = 1
     elif constant_name == "StepTolerance":
@@ -36,8 +38,8 @@ def get_default_constant(constant_name):
         constant_value = False
     elif constant_name == "output_block_hist":
         constant_value = False
-    elif constant_name == "iprint":
-        constant_value = 0
+    elif constant_name == "verbose":
+        constant_value = False
     else:
         raise ValueError("Unknown constant name")
 

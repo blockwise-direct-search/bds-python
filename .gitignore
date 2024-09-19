@@ -1,4 +1,7 @@
 # Python
+# This file is cited from 
+# https://github.com/cobyqa/cobyqa/blob/main/.gitignore,
+# which is written by the author of the repository.
 
 ## Byte-compiled / optimized / DLL files
 __pycache__/

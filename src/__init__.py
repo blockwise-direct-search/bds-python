@@ -22,4 +22,5 @@ from _isrealvector import isrealvector as isrealvector
 from _isrow import is_row as is_row
 from _verify_preconditions import verify_preconditions as verify_preconditions
 from _verify_postconditons import verify_postconditions as verify_postconditions
+import bds_python as bds
 

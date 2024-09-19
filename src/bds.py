@@ -1,10 +1,182 @@
 import __init__
-from examples.rosenbrock_example import chrosen
 
+
+
+
+
+
+
+
+
+def bds(fun, x0, options=None):
+
+    r"""
+    Minimize unconstrained optimization problems using blockwise direct search
+    methods.
+
+    Parameters
+    ----------
+    fun : {callable, None}
+        Objective function to be minimized.
+
+            ``fun(x, *args) -> float``
+
+        where ``x`` is an array with shape (n,) and `args` is a tuple. If `fun`
+        is ``None``, the objective function is assumed to be the zero function,
+        resulting in a feasibility problem.
+    x0 : array_like, shape (n,)
+        Initial guess.
+
+    options : dict, optional
+        Options passed to the solver. Accepted keys are:
+
+            Algorithm : str, optional
+                Algorithm to use. It can be ``"cbds"`` (cyclic blockwise direct
+                search), ``"pbds"`` (randomly permuted blockwise direct search),
+                ``"rbds"`` (randomized blockwise direct search), ``"ds"`` (the
+                classical direct search), ``"pads"`` (parallel blockwise direct
+                search), or ``"scbds"`` (symmetric blockwise direct search).
+                Default is ``"cbds"``.
+            num_blocks : int, optional
+                Number of blocks. A positive integer. Default is ``n`` if
+                ``Algorithm`` is ``"cbds"``, ``"pbds"``, or ``"rbds"``, and 1 if
+                ``Algorithm`` is ``"ds"``.
+            MaxFunctionEvaluations : int, optional
+                Maximum number of function evaluations. Default is ``500 * n``.
+            direction_set : array_like, shape (n, n), optional
+                A matrix whose columns will be used to define the polling
+                directions. If ``options`` does not contain ``direction_set``,
+                then the polling directions will be {e_1, -e_1, ..., e_n, -e_n}.
+                Otherwise, it should be a nonsingular n-by-n matrix. Then the
+                polling directions will be {d_1, -d_1, ..., d_n, -d_n}, where
+                d_i is the i-th column of ``direction_set``. If ``direction_set``
+                is not singular, then we will revise the ``direction_set`` to
+                make it linear independent. Default is the identity matrix.
+                See `get_direction_set` for details.
+            expand : float, optional
+                Expanding factor of step size. A real number no less than 1.
+                Default is ``2.0``.
+            shrink : float, optional
+                Shrinking factor of step size. A positive number less than 1.
+                Default is ``0.5``.
+            forcing_function : callable, optional
+                The forcing function used for deciding whether the step achieves
+                a sufficient decrease. Default is ``lambda alpha: alpha**2``.
+                See also ``reduction_factor``.
+            reduction_factor : array_like, shape (3,), optional
+                Factors multiplied to the forcing function when deciding whether
+                the step achieves a sufficient decrease. A 3-dimensional vector
+                such that ``reduction_factor[0] <= reduction_factor[1] <=
+                reduction_factor[2]``, ``reduction_factor[0] >= 0``, and
+                ``reduction_factor[1] > 0``. ``reduction_factor[0]`` is used for
+                deciding whether to update the base point, 
+                ``reduction_factor[1]`` is used for deciding whether to shrink
+                the step size, and ``reduction_factor[2]`` is used for deciding
+                whether to expand the step size. Default is 
+                ``[0.0, numpy.finfo(float).eps, numpy.finfo(float).eps]``. See
+                also ``forcing_function``.
+            StepTolerance : float, optional
+                Lower bound of the step size. If the step size is smaller than
+                ``StepTolerance``, then the algorithm terminates. A (small)
+                positive number. Default is ``1e-10``.
+            ftarget : float, optional
+                Target of the function value. If the function value is smaller
+                than or equal to this target, then the algorithm terminates.
+                Default is ``-numpy.inf``.
+            polling_inner : str, optional
+                Polling strategy in each block. It can be ``"complete"`` or
+                ``"opportunistic"``. Default is ``"opportunistic"``.
+            cycling_inner : int, optional
+                Cycling strategy employed within each block. It is used only
+                when ``polling_inner`` is ``"opportunistic"``. It can be 0, 1,
+                2, 3, 4. See `cycling` for details. Default is ``3``.
+            with_cycling_memory : bool, optional
+                Whether the cycling strategy within each block memorizes the
+                history or not. It is used only when ``polling_inner`` is
+                ``"opportunistic"``. Default is ``True``.
+            permuting_period : int, optional
+                It is only used in PBDS, which shuffles the blocks every
+                ``permuting_period`` iterations. A positive integer. Default is
+                ``1``.
+            replacement_delay : int, optional
+                It is only used for RBDS. Suppose that ``replacement_delay`` is
+                ``r``. If block ``i`` is selected at iteration ``k``, then it
+                will not be selected at iterations ``k+1``, ..., ``k+r``. An
+                integer between 0 and ``num_blocks-1``. Default is ``0``.
+            seed : int, optional
+                The seed for permuting blocks in PBDS or randomly choosing one
+                block in RBDS. It is only for reproducibility in experiments. A
+                positive integer.
+            output_xhist : bool, optional
+                Whether to output the history of points visited. Default is
+                ``False``.
+            output_alpha_hist : bool, optional
+                Whether to output the history of step sizes. Default is
+                ``False``.
+            output_block_hist : bool, optional
+                Whether to output the history of blocks visited. Default is
+                ``False``.
+            verbose : bool, optional
+                a flag deciding whether to print during the computation.
+                Default is ``False``, which means no printing. If ``verbose``
+                is True, then the function values, the corresponding point,
+                and the step size will be printed in each function evaluation.
+
+    Returns
+    -------
+    `scipy.optimize.OptimizeResult`
+        Result of the optimization procedure, with the following fields:
+
+            message : str
+                The information of the exitflag.
+            funcCount : int
+                The number of function evaluations.
+            xopt : `numpy.ndarray`, shape (n,)
+                Solution point.
+            fopt : float
+                Objective function value at the solution point.
+
+
+        If ``output_xhist`` is True, the result also has the following fields:
+
+            xhist : `numpy.ndarray`, history of points visited, 
+                    shape (n, MaxFunctionEvaluations)
+        If ``output_alpha_hist`` is True, the result also has the following 
+        fields:
+            alpha_hist : `numpy.ndarray`, history of step sizes for every
+                            iteration
+        If ``output_block_hist`` is True, the result also has the following
+        fields:
+            block_hist : `numpy.ndarray`, history of blocks visited
+
+        A description of the termination statuses is given below.
+
+        .. list-table::
+            :widths: 25 75
+            :header-rows: 1
+
+            * - Exit status
+              - Description
+            * - 0
+              - The StepTolearance of the step size has been reached.
+            * - 1
+              - The target objective function value has been reached.
+            * - 2
+              - The maximum number of function evaluations is reached.
+            * - 3
+              - The maximum number of iterations is reached.
+
+    References
+    ----------
+    .. [1] Li, H. and Zhang, Z. *Blockwise direct search methods*. GitHub repo.
+       Department of Applied Mathematics, The Hong Kong Polytechnic University,
+       Hong Kong, China, 2023.        
+       URL: https://github.com/blockwise-direct-search/bds.
+    """
 
 # To my understanding, it is more reasonable to let x0 be a numpy vector in our algorithm, not list.
 # Thus, we need to convert x0 to a numpy vector if it is a list.
-def bds(fun, x0, options=None):
+
     # If FUN is a string, then convert it to a function handle.
     if __init__.ischarstr(fun):
         fun = eval(fun)
@@ -349,6 +521,6 @@ def bds(fun, x0, options=None):
     return xopt, fopt, exitflag, output
 
 
-output1 = bds(chrosen, [1, 2, 3, 4, 5], options={"verbose": "True"})
+# output1 = bds(chrosen, [1, 2, 3, 4, 5], options={"verbose": "True"})
 # output3 = output2.ndim <= 2 and output2.shape[-1] == 1
 # print(output1, output2, output3, output4)

@@ -30,6 +30,9 @@ def bds(fun, x0, options=None):
     options : dict, optional
         Options passed to the solver. Accepted keys are:
 
+            debug_flag : bool, optional
+                If debug_flag is true, the process will run in debug mode. 
+                Otherwise, the process will run without debugging.
             Algorithm : str, optional
                 Algorithm to use. It can be ``"cbds"`` (cyclic blockwise direct
                 search), ``"pbds"`` (randomly permuted blockwise direct search),
@@ -201,9 +204,11 @@ def bds(fun, x0, options=None):
         def fun(x):
             return fun_orig(x.T)
 
-    # If options is None, then set it to an empty dictionary.
+    # Get basic options that are needed for the initialization.
     if options is None:
         options = {}
+    else:
+        options = dict(options)
 
     # Set the default value of debug_flag. If options do not contain debug_flag, then
     # debug_flag is set to false.

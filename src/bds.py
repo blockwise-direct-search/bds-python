@@ -1,4 +1,4 @@
-import __init__
+import numpy as np
 
 
 
@@ -176,9 +176,6 @@ def bds(fun, x0, options=None):
        Hong Kong, China, 2023.        
        URL: https://github.com/blockwise-direct-search/bds.
     """
-
-# To my understanding, it is more reasonable to let x0 be a numpy vector in our algorithm, not list.
-# Thus, we need to convert x0 to a numpy vector if it is a list.
 
     # If FUN is a string, then convert it to a function handle.
     if __init__.ischarstr(fun):
@@ -526,6 +523,17 @@ def bds(fun, x0, options=None):
     return xopt, fopt, exitflag, output
 
 
-# output1 = bds(chrosen, [1, 2, 3, 4, 5], options={"verbose": "True"})
-# output3 = output2.ndim <= 2 and output2.shape[-1] == 1
-# print(output1, output2, output3, output4)
+def _eval_fun(fun, x):
+    # EVAL_FUN evaluates function FUN at point X. If FUN is not well defined at X, return NaN.
+    try:
+        f_real = fun(x)
+    except:
+        print('The function evaluation failed.')
+        f_real = np.nan
+
+    # Apply the moderate extreme barrier to handle NaN, huge values, and evaluation failures.
+    if __init__.np.isnan(f_real):
+        f_real = __init__.np.inf
+    f = min(f_real, 2 ** 100, __init__.np.sqrt(__init__.np.finfo(float).max))
+
+    return f, f_real

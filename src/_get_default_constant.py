@@ -1,20 +1,21 @@
-import sys
-
+import numpy as np
 
 def get_default_constant(constant_name):
+    r'''
+    GET_DEFAULT_CONSTANT gets the default value of OPTIONS for BDS.
+    '''
     if constant_name == "MaxFunctionEvaluations_dim_factor":
         constant_value = 500
     elif constant_name == "Algorithm":
         constant_value = "cbds"
     elif constant_name == "expand":
-        constant_value = 1.5
+        constant_value = 2
     elif constant_name == "shrink":
-        constant_value = 0.4
+        constant_value = 0.5
     elif constant_name == "reduction_factor":
-        constant_value = [0, sys.float_info.min, sys.float_info.min]
+        constant_value = [0, np.finfo(float).eps, np.finfo(float).eps]
     elif constant_name == "forcing_function":
-        def constant_value(alpha):
-            return alpha ** 2
+        constant_value = lambda x: x ** 2
 
     elif constant_name == "alpha_init":
         constant_value = 1
@@ -25,7 +26,7 @@ def get_default_constant(constant_name):
     elif constant_name == "replacement_delay":
         constant_value = 1
     elif constant_name == "ftarget":
-        constant_value = -float("inf")
+        constant_value = -np.inf
     elif constant_name == "polling_inner":
         constant_value = "opportunistic"
     elif constant_name == "cycling_inner":

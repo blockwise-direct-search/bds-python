@@ -1,7 +1,8 @@
-import __init__
+import numpy as np
 
-
-# ISREALSCALAR checks whether x is a real scalar.
-def isrealscalar(x):
-    isrs = __init__.np.isscalar(x) and __init__.np.isreal(x) and __init__.np.ndim(x) == 0
-    return isrs
+def is_scalar(value):
+    r"""
+    Verify if the input variable is a real scalar 
+    (integer, float or NumPy scalar)
+    """
+    return isinstance(value, (int, float, np.number))

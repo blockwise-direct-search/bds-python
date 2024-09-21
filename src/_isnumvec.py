@@ -1,7 +1,14 @@
-import __init__
+import numpy as np
 
-
-def isnumvec(x):
-    is_numvec = (isinstance(x, list) or isinstance(x, __init__.np.ndarray)) and (
-                __init__.np.ndim(x) == 1 or (__init__.np.ndim(x) == 2 and (__init__.np.shape(x)[0] == 1 or __init__.np.shape(x)[1] == 1)))
-    return is_numvec
+def isnumvec(value):
+    r"""
+    Check whether the input is a numerical vector or a single number.
+    """
+    if isinstance(value, (int, float)):  # Check if it is a single number
+        return True
+    elif isinstance(value, list):  # Check if it is a list of numbers
+        return all(isinstance(x, (int, float)) for x in value)
+    elif isinstance(value, np.ndarray):  # Check if it is a numpy array
+        return (np.issubdtype(value.dtype, np.number) and 
+                (value.ndim == 1 or (value.ndim == 2 and value.shape[1] == 1)))
+    return False

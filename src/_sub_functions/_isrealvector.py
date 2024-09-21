@@ -1,6 +1,6 @@
 import numpy as np
 
-def is_numerical_vector(value):
+def isrealvector(value):
     r"""
     Verify if the input is a numerical vector (row vector, column vector, or 
     scalar) and return the length of the vector.

@@ -1,4 +1,5 @@
 import numpy as np
+from _sub_functions import *
 
 
 
@@ -178,7 +179,7 @@ def bds(fun, x0, options=None):
     """
 
     # If FUN is a string, then convert it to a function handle.
-    if __init__.ischarstr(fun):
+    if ischarstr(fun):
         fun = eval(fun)
     # Redefine fun to accept column vectors if x0 is a row vector, as we use column vectors internally.
     fun_orig = fun

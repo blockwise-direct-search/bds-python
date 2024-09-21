@@ -1,6 +1,6 @@
 import numpy as np
 
-def is_row_vector(value):
+def isrow(value):
     r"""
     Verify if the input variable is a row vector (including list and NumPy array)
     """

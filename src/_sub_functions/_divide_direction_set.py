@@ -1,6 +1,6 @@
 import numpy as np
 
-def divide_direction_set(n, num_blocks, debug_flag):
+def divide_direction_set(n, num_blocks, debug_flag = False):
 
     r"""
     DIVIDE_DIRECTION_SET gets indices of the directions in each block.
@@ -48,6 +48,9 @@ def divide_direction_set(n, num_blocks, debug_flag):
 
     for i in range(num_blocks):
         index_direction_set[i] = list(range(initial_index_each_block[i], initial_index_each_block[i] + num_directions_block[i]))
+
+    # Use map function to subtract 1 from each element
+    index_direction_set = [list(map(lambda x: x - 1, sublist)) for sublist in index_direction_set]
 
     if debug_flag:
         if len(index_direction_set) != num_blocks:

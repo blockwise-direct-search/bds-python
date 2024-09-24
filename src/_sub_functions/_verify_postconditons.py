@@ -1,7 +1,7 @@
 import numpy as np
-from _eval_fun import eval_fun
-from _isrealvector import isrealvector
-from _isrealmatrix import isrealmatrix
+from ._eval_fun import eval_fun
+from ._isrealvector import isrealvector
+from ._isrealmatrix import isrealmatrix
 
 def verify_postconditions(fun, xopt, fopt, exitflag, output):
     """

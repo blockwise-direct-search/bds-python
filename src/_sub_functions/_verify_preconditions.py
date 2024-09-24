@@ -1,7 +1,7 @@
 import numpy as np
-from _ischarstr import ischarstr 
-from _isrealvector import isrealvector
-from _isrealmatrix import isrealmatrix
+from ._ischarstr import ischarstr
+from ._isrealvector import isrealvector
+from ._isrealmatrix import isrealmatrix
 
 def verify_preconditions(fun, x0, options):
     r'''

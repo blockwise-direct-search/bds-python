@@ -16,7 +16,6 @@ def get_default_constant(constant_name):
         constant_value = [0, np.finfo(float).eps, np.finfo(float).eps]
     elif constant_name == "forcing_function":
         constant_value = lambda x: x ** 2
-
     elif constant_name == "alpha_init":
         constant_value = 1
     elif constant_name == "StepTolerance":

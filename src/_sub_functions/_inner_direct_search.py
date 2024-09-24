@@ -1,7 +1,8 @@
 import numpy as np
-from _eval_fun import eval_fun
-from _cycling import cycling
-from _get_exitflag import get_exitflag
+from ._eval_fun import eval_fun
+from ._cycling import cycling
+from ._get_exitflag import get_exitflag
+import pdb
 
 def inner_direct_search(fun, xbase, fbase, D, direction_indices, alpha, options):
     """
@@ -64,6 +65,7 @@ def inner_direct_search(fun, xbase, fbase, D, direction_indices, alpha, options)
 
     for j in range(num_directions):
         # Evaluate the objective function for the current polling direction.
+        pdb.set_trace()
         xnew = xbase + alpha * D[:, j]
         fnew, fnew_real = eval_fun(fun, xnew)
         nf += 1

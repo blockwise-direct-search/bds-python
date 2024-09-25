@@ -49,7 +49,7 @@ def divide_direction_set(n, num_blocks, debug_flag = False):
     for i in range(num_blocks):
         index_direction_set[i] = list(range(initial_index_each_block[i], initial_index_each_block[i] + num_directions_block[i]))
 
-    # Use map function to subtract 1 from each element
+    # Use map function to subtract 1 from each element, since the index of Python starts from 0.
     index_direction_set = [list(map(lambda x: x - 1, sublist)) for sublist in index_direction_set]
 
     if debug_flag:

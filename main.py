@@ -1,21 +1,6 @@
 import numpy as np
 import pdb
-from _sub_functions import *
-
-def chrosen(x):
-    """
-    The objective function defined by the Rosenbrock function.
-
-    Args:
-        x (numpy.ndarray): Input vector.
-
-    Returns:
-        float: Function value.
-    """
-    f = np.sum((x[:-1] - 1) ** 2 + 4 * (x[1:] - x[:-1] ** 2) ** 2)
-    # Uncomment the line below if you want to add noise to the function value
-    # f *= (1 + 1e-8 * np.random.randn())
-    return f
+from sub_functions import *
 
 def bds(fun, x0, options=None):
     r"""
@@ -232,11 +217,9 @@ def bds(fun, x0, options=None):
         fun = globals()[fun]  
     # Redefine fun to accept columns if x0 is a row.
     fun_orig = fun
-    pdb.set_trace()
     # TODO: why we use fun_orig here?
     if x0_is_row:
         fun = lambda x: fun_orig(x.ravel())
-    pdb.set_trace()
 
     # Avoid randomized strings in options.
     if "seed" in options:
@@ -381,13 +364,12 @@ def bds(fun, x0, options=None):
 
     # Initialize base point and its function value.
     xbase = x0
-    pdb.set_trace()
     fbase, fbase_real = eval_fun(fun, xbase)
 
     if verbose:
         print(f"Function number 1, F = {fbase_real:.6f}")
         print("The corresponding X is:")
-        print(" ".join(f"{val:.6f}" for val in xbase))
+        print(" ".join(f"{val:.6f}" for val in xbase.ravel()))
 
     # Initialize best point and function value.
     xopt = xbase
@@ -410,18 +392,11 @@ def bds(fun, x0, options=None):
         maxit = 0
 
     # Initialize block indices.
-    all_block_indices = np.arange(1, num_blocks + 1)
+    all_block_indices = np.arange(0, num_blocks)
     num_visited_blocks = 0
     
     # Initialize the output structure
-    output = {
-        "funcCount": 0,
-        "blocks_hist": None,
-        "alpha_hist": None,
-        "xhist": None,
-        "fhist": None,
-        "message": ""
-    }
+    output = {}
     
     for iter in range(1, maxit + 1):
         # Define block_indices based on the algorithm
@@ -455,7 +430,7 @@ def bds(fun, x0, options=None):
                 "polling_inner": polling_inner,
                 "verbose": verbose
             }
-            pdb.set_trace()
+
             # Perform the direct search in the block
             sub_xopt, sub_fopt, sub_exitflag, sub_output = inner_direct_search(
                 fun, xbase, fbase, D[:, direction_indices], direction_indices,
@@ -488,7 +463,7 @@ def bds(fun, x0, options=None):
             
             # Record best function value and point in block
             fopt_all[i_real] = sub_fopt
-            xopt_all[:, i_real] = sub_xopt
+            xopt_all[:, [i_real]] = sub_xopt
             
             # Update xbase and fbase if not using "pads"
             if options["Algorithm"].lower() != "pads":
@@ -556,6 +531,9 @@ def bds(fun, x0, options=None):
     if debug_flag:
         verify_postconditions(fun_orig, xopt, fopt, exitflag, output)
 
-    return xopt, fopt, exitflag, output
+    print(xopt)
+    print(fopt)
+    print(exitflag)
+    print(output)
 
-bds(fun = chrosen, x0 = np.array([0, 0, 0]))
+    return xopt, fopt, exitflag, output

@@ -2,7 +2,6 @@ import numpy as np
 from ._eval_fun import eval_fun
 from ._cycling import cycling
 from ._get_exitflag import get_exitflag
-import pdb
 
 def inner_direct_search(fun, xbase, fbase, D, direction_indices, alpha, options):
     """
@@ -63,21 +62,21 @@ def inner_direct_search(fun, xbase, fbase, D, direction_indices, alpha, options)
     fopt = fbase
     xopt = xbase
 
-    for j in range(num_directions):
+    for direction_idx in range(num_directions):
         # Evaluate the objective function for the current polling direction.
-        pdb.set_trace()
-        xnew = xbase + alpha * D[:, j]
+        # D[:, direction_idx] is a row vector. So we need to use slicing to get a column vector.
+        xnew = xbase + alpha * D[:, [direction_idx]]
         fnew, fnew_real = eval_fun(fun, xnew)
         nf += 1
 
         # Record the real function value.
         fhist[nf - 1] = fnew_real
-        xhist[:, nf - 1] = xnew
+        xhist[:, [nf - 1]] = xnew
 
         if verbose:
             print(f"Function number {FunctionEvaluations_exhausted + nf}, F = {fnew_real}")
             print("The corresponding X is:")
-            print(" ".join(f"{xi:.6f}" for xi in xnew))
+            print(" ".join(f"{xi:.6f}" for xi in xnew.ravel()))
 
         # Update the best point and the best function value.
         if fnew < fopt:
@@ -89,7 +88,7 @@ def inner_direct_search(fun, xbase, fbase, D, direction_indices, alpha, options)
 
         # Opportunistic case: if sufficient decrease is achieved, stop computations.
         if sufficient_decrease and polling_inner.lower() != "complete":
-            direction_indices = cycling(direction_indices, j, cycling_strategy, with_cycling_memory)
+            direction_indices = cycling(direction_indices, direction_idx, cycling_strategy, with_cycling_memory)
             break
 
         if nf >= MaxFunctionEvaluations or fnew <= ftarget:

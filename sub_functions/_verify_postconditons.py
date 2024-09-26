@@ -15,9 +15,9 @@ def verify_postconditions(fun, xopt, fopt, exitflag, output):
     # Verify whether fopt is a real number.
     if not isinstance(fopt, float):
         raise ValueError("fopt is not a real number.")
-    
+
     # Verify whether fun(xopt) == fopt
-    if not np.isclose(eval_fun(fun, xopt), fopt):  # Using np.isclose for floating-point comparison
+    if not np.isclose(eval_fun(fun, xopt)[0], fopt):  # Using np.isclose for floating-point comparison
         raise ValueError("fun(xopt) is not equal to fopt.")
     
     # Verify whether exitflag is an integer.
@@ -62,9 +62,9 @@ def verify_postconditions(fun, xopt, fopt, exitflag, output):
         fhist_eval = np.full(len(fhist), np.nan)
         for i in range(len(fhist)):
             if xopt.ndim == 1:  # xopt is a row vector
-                fhist_eval[i] = eval_fun(fun, xhist[:, i])
+                fhist_eval[i] = eval_fun(fun, xhist[:, i])[0]
             else:
-                fhist_eval[i] = eval_fun(fun, xhist[:, i])
+                fhist_eval[i] = eval_fun(fun, xhist[:, i])[0]
         
         # In case of fhist_eval(i) = NaN or fhist(i) = NaN.
         assert np.all((np.isnan(fhist) & np.isnan(fhist_eval)) | (fhist == fhist_eval))

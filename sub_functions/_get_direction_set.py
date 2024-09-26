@@ -1,7 +1,5 @@
 import numpy as np
 from scipy.linalg import qr
-import pdb
-
 
 def get_direction_set(n, options=None):
     """
@@ -63,7 +61,7 @@ def get_direction_set(n, options=None):
             direction_set = np.eye(n)
         else:
             # QR factorization to find a maximal linearly independent subset.
-            Q, R, p = qr(A, pivoting=True)  # qr factorization with column pivoting.
+            Q, R, p = qr(direction_set, pivoting=True)  # qr factorization with column pivoting.
             num_directions = direction_set.shape[1]
             is_independent = np.abs(np.diag(R)) >= 1e-10
             direction_set = np.hstack(

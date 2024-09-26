@@ -378,7 +378,7 @@ def bds(fun, x0, options=None):
     # Initialize function evaluations count and history.
     nf = 1
     if output_xhist:
-        xhist[:, nf - 1] = xbase
+        xhist[:, [nf - 1]] = xbase
 
     fhist[nf - 1] = fbase_real
 
@@ -402,19 +402,22 @@ def bds(fun, x0, options=None):
         # Define block_indices based on the algorithm
         if options["Algorithm"].lower() in ["ds", "cbds", "pads"]:
             block_indices = all_block_indices
-        elif options["Algorithm"].lower() == "pbds" and (iter - 1) % options["permuting_period"] == 0:
-            block_indices = random_stream.permutation(len(all_block_indices)) + 1  # 1-based index
+        elif options["Algorithm"].lower() == "pbds" and (iter - 1) % permuting_period == 0:
+            block_indices = random_stream.permutation(len(all_block_indices))   # 1-based index
         elif options["Algorithm"].lower() == "rbds":
             unavailable_block_indices = block_hist[max(0, iter - replacement_delay):iter]
             available_block_indices = np.setdiff1d(all_block_indices, unavailable_block_indices)
             idx = random_stream.integers(len(available_block_indices))
             block_indices = available_block_indices[idx]
+            pdb.set_trace()
         elif options["Algorithm"].lower() == "scbds":
-            block_indices = np.concatenate((all_block_indices, (num_blocks - 1) - np.arange(1, num_blocks - 1)[::-1]))
+            block_indices = np.concatenate((all_block_indices, (num_blocks - 1) - np.arange(1, num_blocks - 1)[::-1])) - 1
 
         for i in range(len(block_indices)):
-            i_real = block_indices[i]  # Real index of the block to visit
-            
+
+            # Real index of the block to visit
+            i_real = block_indices[i]
+
             # Get indices of directions in the block
             direction_indices = direction_set_indices[i_real]
             
@@ -531,9 +534,9 @@ def bds(fun, x0, options=None):
     if debug_flag:
         verify_postconditions(fun_orig, xopt, fopt, exitflag, output)
 
-    print(xopt)
+    # print(xopt)
     print(fopt)
-    print(exitflag)
-    print(output)
+    # print(exitflag)
+    # print(output)
 
     return xopt, fopt, exitflag, output

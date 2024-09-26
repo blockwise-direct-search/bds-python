@@ -1,7 +1,7 @@
-import numpy as np
 from ._ischarstr import ischarstr
 from ._isrealvector import isrealvector
 from ._isrealmatrix import isrealmatrix
+import pdb
 
 def verify_preconditions(fun, x0, options):
     r'''
@@ -9,7 +9,7 @@ def verify_preconditions(fun, x0, options):
     the function.
     '''
 
-    if (not callable(fun) or not ischarstr(fun)):
+    if not (callable(fun) or ischarstr(fun)):
         raise ValueError("fun should be a function handle.")
     
     if not isrealvector(x0):

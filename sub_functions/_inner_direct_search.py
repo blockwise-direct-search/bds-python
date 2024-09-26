@@ -2,6 +2,7 @@ import numpy as np
 from ._eval_fun import eval_fun
 from ._cycling import cycling
 from ._get_exitflag import get_exitflag
+import pdb
 
 def inner_direct_search(fun, xbase, fbase, D, direction_indices, alpha, options):
     """

@@ -38,6 +38,8 @@ def get_default_constant(constant_name):
         constant_value = False
     elif constant_name == "output_block_hist":
         constant_value = False
+    elif constant_name == "output_xhist_failed":
+        constant_value = False
     elif constant_name == "verbose":
         constant_value = False
     else:

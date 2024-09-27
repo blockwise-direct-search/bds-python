@@ -519,8 +519,8 @@ def bds(fun, x0, options=None):
     if output_alpha_hist:
         output["alpha_hist"] = alpha_hist[:, :min(iter, maxit)]
     if output_xhist:
-        output["xhist"] = xhist[:, :nf+1]
-    output["fhist"] = fhist[:nf+1]
+        output["xhist"] = xhist[:, :nf]
+    output["fhist"] = fhist[:nf]
 
     # Set message according to exitflag
     exit_messages = {
@@ -533,8 +533,8 @@ def bds(fun, x0, options=None):
 
     # Transpose xopt if x0 is a row
     if x0_is_row:
-        xopt = xopt.T
-    
+        xopt = xopt.ravel()
+
     # Verify postconditions if debug_flag is true
     if debug_flag:
         verify_postconditions(fun_orig, xopt, fopt, exitflag, output)

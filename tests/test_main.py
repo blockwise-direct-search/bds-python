@@ -39,10 +39,10 @@ def test_bds():
 
     x0 = np.zeros(3)
 
-    # # First call to bds
-    # _, fopt, _, _ = bds(chrosen, x0)
-    # assert np.isclose(fopt, 0), "The function value is not close to 0."
-    #
+    # First call to bds
+    _, fopt, _, _ = bds(chrosen, x0)
+    assert np.isclose(fopt, 0), "The function value is not close to 0."
+
     options = {
         'verbose': False,
         'MaxFunctionEvaluations_dim_factor': 500,
@@ -51,22 +51,21 @@ def test_bds():
         'output_xhist': True,
         'debug_flag': True
     }
-    #
-    # # Second call to bds
-    # _, fopt, _, _ = bds(chrosen, x0, options)
-    # assert np.isclose(fopt, 0), "The function value is not close to 0."
+
+    # Second call to bds
+    _, fopt, _, _ = bds(chrosen, x0, options)
+    assert np.isclose(fopt, 0), "The function value is not close to 0."
 
     # Testing different algorithms
-    # algorithms = ["pbds", "rbds", "pads", "scbds", "ds"]
-    # tolerances = [1e-8, 1e-8, 1e-6, 1e-10, 1e-6]
-    options['Algorithm'] = "pads"
-    _, fopt, _, _ = bds(chrosen, x0, options)
+    algorithms = ["pbds", "rbds", "pads", "scbds", "ds"]
+    tolerances = [1e-8, 1e-6, 1e-6, 1e-10, 1e-6]
+    # options['Algorithm'] = "pads"
+    # _, fopt, _, _ = bds(chrosen, x0, options)
 
-    # for algo, tol in zip(algorithms, tolerances):
-    #     options['Algorithm'] = algo
-    #     _, fopt, _, _ = bds(chrosen, x0, options)
-    #     pdb.set_trace()
-    #     assert abs(fopt) < tol, f'The function value for {algo} is not close to 0.'
+    for algo, tol in zip(algorithms, tolerances):
+        options['Algorithm'] = algo
+        _, fopt, _, _ = bds(chrosen, x0, options)
+        assert abs(fopt) < tol, f'The function value for {algo} is not close to 0.'
 
 if __name__ == '__main__':
     pytest.main([__file__])

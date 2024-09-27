@@ -32,7 +32,8 @@ def rosenbrock_example(options = None, x0 = None):
     # Set the default value of x0 to [0, 0, 0] if it is not provided.
     if x0 is None:
         x0 = np.array([0, 0, 0])
-    options["verbose"] = True
+    options["verbose"] = False
+    options["Algorithm"] = "rbds"
     bds(chrosen, x0, options)
 
 rosenbrock_example()

@@ -67,6 +67,8 @@ def inner_direct_search(fun, xbase, fbase, D, direction_indices, alpha, options)
         # Evaluate the objective function for the current polling direction.
         # D[:, direction_idx] is a row vector. So we need to use slicing to get a column vector.
         xnew = xbase + alpha * D[:, [direction_idx]]
+        # if xbase.ndim == 1:
+        #     pdb.set_trace()
         fnew, fnew_real = eval_fun(fun, xnew)
         nf += 1
 
@@ -110,6 +112,9 @@ def inner_direct_search(fun, xbase, fbase, D, direction_indices, alpha, options)
         'direction_indices': direction_indices,
         'terminate': terminate
     }
+
+    # if xopt.ndim == 1:
+    #     pdb.set_trace()
 
     return xopt, fopt, exitflag, output
 

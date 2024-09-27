@@ -1,5 +1,3 @@
-import numpy as np
-import pdb
 from sub_functions import *
 
 def bds(fun, x0, options=None):
@@ -217,7 +215,8 @@ def bds(fun, x0, options=None):
         fun = globals()[fun]  
     # Redefine fun to accept columns if x0 is a row.
     fun_orig = fun
-    # TODO: why we use fun_orig here?
+    # If we use fun here, then the function will fall into an infinite loop
+    # since it will call itself.
     if x0_is_row:
         fun = lambda x: fun_orig(x.ravel())
 
@@ -408,8 +407,8 @@ def bds(fun, x0, options=None):
             unavailable_block_indices = block_hist[max(0, iter - replacement_delay):iter]
             available_block_indices = np.setdiff1d(all_block_indices, unavailable_block_indices)
             idx = random_stream.integers(len(available_block_indices))
-            block_indices = available_block_indices[idx]
-            pdb.set_trace()
+            # Since len function can not deal with numpy.int64, we need to convert it to list
+            block_indices = [(available_block_indices[idx])]
         elif options["Algorithm"].lower() == "scbds":
             block_indices = np.concatenate((all_block_indices, (num_blocks - 1) - np.arange(1, num_blocks - 1)[::-1])) - 1
 
@@ -434,11 +433,17 @@ def bds(fun, x0, options=None):
                 "verbose": verbose
             }
 
+            # if xbase.ndim == 1:
+            #     pdb.set_trace()
+
             # Perform the direct search in the block
             sub_xopt, sub_fopt, sub_exitflag, sub_output = inner_direct_search(
                 fun, xbase, fbase, D[:, direction_indices], direction_indices,
                 alpha_all[i_real], suboptions
             )
+            
+            # if sub_xopt.ndim == 1:
+            #     pdb.set_trace()
 
             # Record the index of the block visited
             num_visited_blocks += 1
@@ -496,7 +501,7 @@ def bds(fun, x0, options=None):
         index = np.nanargmin(fopt_all)
         if fopt_all[index] < fopt:
             fopt = fopt_all[index]
-            xopt = xopt_all[:, index]
+            xopt = xopt_all[:, [index]]
         
         # For "pads", update xbase and fbase only after the outer loop
         if options["Algorithm"].lower() == "pads":
@@ -514,8 +519,8 @@ def bds(fun, x0, options=None):
     if output_alpha_hist:
         output["alpha_hist"] = alpha_hist[:, :min(iter, maxit)]
     if output_xhist:
-        output["xhist"] = xhist[:, :nf]
-    output["fhist"] = fhist[:nf]
+        output["xhist"] = xhist[:, :nf+1]
+    output["fhist"] = fhist[:nf+1]
 
     # Set message according to exitflag
     exit_messages = {

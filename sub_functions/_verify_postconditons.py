@@ -64,7 +64,7 @@ def verify_postconditions(fun, xopt, fopt, exitflag, output):
         fhist_eval = np.full(len(fhist), np.nan)
         for i in range(len(fhist)):
             if xopt.ndim == 1:  # xopt is a row vector
-                fhist_eval[i] = eval_fun(fun, xhist[:, i])[0]
+                fhist_eval[i] = eval_fun(fun, xhist[:, i].ravel())[0]
             else:
                 fhist_eval[i] = eval_fun(fun, xhist[:, i])[0]
         

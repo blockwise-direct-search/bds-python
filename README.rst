@@ -1,1 +1,0 @@
-This is the python version of BDS (https://github.com/blockwise-direct-search/bds_python).

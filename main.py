@@ -539,9 +539,12 @@ def bds(fun, x0, options=None):
     if debug_flag:
         verify_postconditions(fun_orig, xopt, fopt, exitflag, output)
 
-    # print(xopt)
     print(fopt)
-    # print(exitflag)
-    # print(output)
 
+    # Return the result
+    # TODO: I do not know why iter should be considered as an output.
+    #       It is only for the performance profile in the experiments
+    #       compared with linesearch-type direct search methods.
+    #       I will remove it in the future.
+    output["iter"] = iter
     return xopt, fopt, exitflag, output

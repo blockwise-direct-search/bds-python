@@ -395,6 +395,10 @@ def _optiprofiler_feature_display_name(feature_name: str, display_name: str):
 
 
 def _escape_matplotlib_text(value: str) -> str:
+    import shutil
+
+    if not shutil.which("latex"):
+        return value
     return value.replace("\\", "\\\\").replace("_", "\\_")
 
 
